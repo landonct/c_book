@@ -1,0 +1,2 @@
+1. Write a function squeeze(char s[], char c[]) that deletes all occurences of each character in s in c
+2. Write any(char s1[], char s2[]) which returns the first location in s1 where an character from s2 occurs. (Like strbrk, which returns a pointer)
