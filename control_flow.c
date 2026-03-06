@@ -11,7 +11,7 @@ int main()
         nums[i] = i;
     }
 
-    binsearch(33333, nums, arr_size);
+    binsearch(333333, nums, arr_size);
     return 0;
 }
 
@@ -21,7 +21,7 @@ int binsearch(int x, int v[], int n)
 
     low = 0;
     high = n - 1;
-    while( low <= high) 
+    while(low <= high) 
     {
         mid = (low + high) / 2;
         if(x < v[mid])
@@ -32,4 +32,24 @@ int binsearch(int x, int v[], int n)
             return v[mid];
     }
     return -1;
+}
+
+/* Binary search with 1 test within the loop */
+int binsearch2(int x, int v[], int n) 
+{
+    int low, mid, high;
+
+    low = 0;
+    high = n - 1;
+    while(low <= high)
+    {
+        mid = (low + high) / 2;
+        if(x < v[mid])
+        {
+            high = mid - 1;
+        } else
+        {
+            
+        }
+    }
 }
