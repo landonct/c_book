@@ -1,64 +1,77 @@
 // Compute the solution to an arbitrary soduku
 
 #include <stdio.h>
+#include <stdlib.h>
 #define SUDOKU_MAX_LEN 9
 #define PUZZLE_MAX_LINE 81
 #define HASH_MAX_LEN 12
 
+int (*set_grid(void))[SUDOKU_MAX_LEN];
+int is_solved(int (*)[SUDOKU_MAX_LEN]);
+int (*attempt_solution(int (*)[SUDOKU_MAX_LEN]))[SUDOKU_MAX_LEN];
+int (*read_puzzle(int (*)[SUDOKU_MAX_LEN]))[SUDOKU_MAX_LEN];
+void print_puzzle(int (*)[SUDOKU_MAX_LEN]);
+
 int main()
 {
-    int *grid, *set_grid(void);
+    int (*grid)[SUDOKU_MAX_LEN];
+     
     // Set up the grid in an 9 x 9 array
     grid = set_grid();
 
-    // Loop over the 9 numbers
-    // Iterate over the rows placing numbers in empty spaces
-    unsigned num = 1;
-    int col, row;
-    for (col = 0; col < SUDOKU_MAX_LEN; col++) // num <= SUDOKU_MAX_LEN
+    print_puzzle(grid);
+
+    while(!is_solved(grid))
     {
-        for (row = 0; row < SUDOKU_MAX_LEN; row++)
-        {
-            if (grid[row])
-            {
-                // If empty, add in num. Start checking ALL other entries
-            }
-        }
+        attempt_solution(grid);
     }
 
-    // Check if it is a valid placement
+    free(grid);
+
+    return 0;
 }
 
-int *set_grid(void)
+// this returns a pointer to heap alocted memory. caller MUST free
+int (*set_grid(void))[SUDOKU_MAX_LEN]
 {
-    int *read_puzzle(int*);
-    int grid[SUDOKU_MAX_LEN][SUDOKU_MAX_LEN];
-    read_puzzle(grid[0]);
+    int (*grid)[SUDOKU_MAX_LEN] = (int (*)[SUDOKU_MAX_LEN])malloc(sizeof(int) * SUDOKU_MAX_LEN * SUDOKU_MAX_LEN);
+    read_puzzle(grid);
 
-    return grid[0];
+    return grid;
 }
 
-int *read_puzzle(int *grid)
+int (*read_puzzle(int (*grid)[SUDOKU_MAX_LEN]))[SUDOKU_MAX_LEN]
 {
-    int i = 0, j = 0;
+    printf("Reading puzzle...\n");
+    int i = 0, j;
     int c;
-    int hash_code[HASH_MAX_LEN], puzzle_info[PUZZLE_MAX_LINE];
-    while ((c = getchar()) != ' ')
+    int hash_code[HASH_MAX_LEN], puzzle_info[PUZZLE_MAX_LINE]; // hash_code will be used to check against which puzzles i have already solved in another file
+    while ((c = getchar()) != ' ' && c != EOF)
     {
+        if (i >= HASH_MAX_LEN)
+        {
+            while ((c = getchar()) != ' ');
+            break;
+        }
         hash_code[i] = c - '0';
         i++;
     }
 
     i = 0;
-    while ((c = getchar()) != ' ')
+    while ((c = getchar()) != ' ' && c != EOF)
     {
+        if (i >= PUZZLE_MAX_LINE)
+        {
+            while ((c = getchar()) != ' ');
+            break;
+        }
         puzzle_info[i] = c - '0';
         i++;
     }
 
     for (i = 0; i < SUDOKU_MAX_LEN; i++)
     {
-        for (; j < SUDOKU_MAX_LEN; j++)
+        for (j = 0; j < SUDOKU_MAX_LEN; j++)
         {
             grid[i][j] = puzzle_info[SUDOKU_MAX_LEN * i + j];
         }
@@ -85,4 +98,38 @@ int check_block(int *row, int *col)
     The box will start at N % 3 == 0 for rows and cols, so only iterate over N / 3
     different slots*/
     return 0;
+}
+
+int is_solved(int (*grid)[SUDOKU_MAX_LEN])
+{
+    return 1;
+}
+
+int (*attempt_solution(int (*grid)[SUDOKU_MAX_LEN]))[SUDOKU_MAX_LEN]
+{
+    return grid;
+}
+
+// print the grid in a nice 9x9 format 
+void print_puzzle(int (*grid)[SUDOKU_MAX_LEN])
+{
+    int i, j;
+
+    for (i = 0; i < SUDOKU_MAX_LEN; i++)
+    {
+        for (j = 0; j < SUDOKU_MAX_LEN; j++)
+        {
+            int val = grid[i][j];
+            if (val)
+            {
+                printf("%d ", val);
+            } else
+            {
+                printf("%d ", val);
+            }
+
+            
+        }
+        putchar('\n');
+    }
 }
