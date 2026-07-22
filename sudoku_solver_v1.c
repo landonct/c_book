@@ -12,13 +12,16 @@ int is_solved(int (*)[SUDOKU_MAX_LEN]);
 int (*attempt_solution(int (*)[SUDOKU_MAX_LEN]))[SUDOKU_MAX_LEN];
 int (*read_puzzle(int (*)[SUDOKU_MAX_LEN]))[SUDOKU_MAX_LEN];
 void print_puzzle(int (*)[SUDOKU_MAX_LEN]);
+void save_mutable_idx(int (*)[SUDOKU_MAX_LEN], int *, int n);
 
 int main()
 {
     int (*grid)[SUDOKU_MAX_LEN];
+    int mutable_idx[SUDOKU_MAX_LEN * SUDOKU_MAX_LEN];
 
     // Set up the grid in an 9 x 9 array
     grid = set_grid();
+    save_mutable_idx(grid, mutable_idx, SUDOKU_MAX_LEN * SUDOKU_MAX_LEN);
 
     print_puzzle(grid);
 
@@ -88,13 +91,25 @@ int (*read_puzzle(int (*grid)[SUDOKU_MAX_LEN])) [SUDOKU_MAX_LEN]
     return grid;
 }
 
-int check_row(int *row)
+void save_mutable_idx(int (*grid)[SUDOKU_MAX_LEN], int *idx, int n)
+{
+    int i, j;
+    for (i = 0; i < SUDOKU_MAX_LEN; i++)
+    {
+        for (j = 0; j < SUDOKU_MAX_LEN; j++)
+        {
+            idx[i * SUDOKU_MAX_LEN + j] = (!grid[i][j]) ? 1 : 0; // unsafe write since no bound is checked
+        }
+    }
+}
+
+int check_row(int (*row)[SUDOKU_MAX_LEN])
 {
     /*Check if the given row contains no matching numbers*/
     return 0;
 }
 
-int check_col(int *col)
+int check_col(int (*col)[SUDOKU_MAX_LEN])
 {
     /*Check if the given column contains no matching numbers*/
     return 0;
