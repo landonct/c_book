@@ -37,13 +37,15 @@ int main() {
   print_puzzle(grid);
   putchar('\n');
 
+  int iterations = 0;
   while (!is_solved(grid)) {
     attempt_solution(grid, mutable_idx, mutable_slots, &mutable_cell_num);
     // print_puzzle(grid);
-    putchar('\n');
+    iterations++;
   }
 
   print_puzzle(grid);
+  printf("The puzzle was solved in %d iterations\n", iterations);
 
   free(grid);
 
@@ -225,11 +227,7 @@ void print_puzzle(int (*grid)[SUDOKU_MAX_LEN]) {
   for (i = 0; i < SUDOKU_MAX_LEN; i++) {
     for (j = 0; j < SUDOKU_MAX_LEN; j++) {
       int val = grid[i][j];
-      if (val) {
-        printf("%d ", val);
-      } else {
-        printf("%d ", val);
-      }
+      printf("%d ", val);
     }
     putchar('\n');
   }
