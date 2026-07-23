@@ -9,10 +9,10 @@
 #define HASH_MAX_LEN 12
 
 int is_solved(int (*)[SUDOKU_MAX_LEN]);
-void attempt_solution(int (*)[SUDOKU_MAX_LEN], int**, const int, int*);
+void attempt_solution(int (*)[SUDOKU_MAX_LEN], int **, const int, int *);
 int read_puzzle(int (*)[SUDOKU_MAX_LEN]);
 void print_puzzle(int (*)[SUDOKU_MAX_LEN]);
-void save_mutable_idx(int (*)[SUDOKU_MAX_LEN], int**, int);
+void save_mutable_idx(int (*)[SUDOKU_MAX_LEN], int **, int);
 int check_puzzle(int (*)[SUDOKU_MAX_LEN]);
 int check_row(int (*)[SUDOKU_MAX_LEN]);
 
@@ -30,8 +30,8 @@ int main() {
   }
   mutable_slots = read_puzzle(grid);
   printf("There are %d mutable slots\n", mutable_slots);
-  int* mutable_idx[mutable_slots];  // variable length as determined at runtime
-                                    // by the puzzle
+  int *mutable_idx[mutable_slots]; // variable length as determined at runtime
+                                   // by the puzzle
   save_mutable_idx(grid, mutable_idx, mutable_slots);
 
   print_puzzle(grid);
@@ -57,12 +57,13 @@ int read_puzzle(int (*grid)[SUDOKU_MAX_LEN]) {
   int i = 0, j;
   int c, mutable_slots = 0;
   int hash_code[HASH_MAX_LEN],
-      puzzle_info[PUZZLE_MAX_LINE];  // hash_code will be used to check against
-                                     // which puzzles i have already solved in
-                                     // another file
+      puzzle_info[PUZZLE_MAX_LINE]; // hash_code will be used to check against
+                                    // which puzzles i have already solved in
+                                    // another file
   while ((c = getchar()) != ' ' && c != EOF) {
     if (i >= HASH_MAX_LEN) {
-      while ((c = getchar()) != ' ');
+      while ((c = getchar()) != ' ')
+        ;
       break;
     }
     hash_code[i] = c - '0';
@@ -72,14 +73,16 @@ int read_puzzle(int (*grid)[SUDOKU_MAX_LEN]) {
   i = 0;
   while ((c = getchar()) != ' ' && c != EOF) {
     if (i >= PUZZLE_MAX_LINE) {
-      while ((c = getchar()) != ' ');
+      while ((c = getchar()) != ' ')
+        ;
       break;
     }
     puzzle_info[i] = c - '0';
     i++;
   }
 
-  while ((c = getchar()) != '\n' && c != EOF);
+  while ((c = getchar()) != '\n' && c != EOF)
+    ;
 
   for (i = 0; i < SUDOKU_MAX_LEN; i++) {
     for (j = 0; j < SUDOKU_MAX_LEN; j++) {
@@ -93,7 +96,7 @@ int read_puzzle(int (*grid)[SUDOKU_MAX_LEN]) {
   return mutable_slots;
 }
 
-void save_mutable_idx(int (*grid)[SUDOKU_MAX_LEN], int** idx, int n) {
+void save_mutable_idx(int (*grid)[SUDOKU_MAX_LEN], int **idx, int n) {
   int i, j, k = 0;
   for (i = 0; i < SUDOKU_MAX_LEN; i++) {
     for (j = 0; j < SUDOKU_MAX_LEN; j++) {
@@ -101,6 +104,7 @@ void save_mutable_idx(int (*grid)[SUDOKU_MAX_LEN], int** idx, int n) {
         printf("k: %d, n: %d\n", k, n);
         fprintf(stderr,
                 "Number of empty slots is larger than the allocated size\n");
+        free(grid);
         exit(EXIT_FAILURE);
       }
 
@@ -190,15 +194,16 @@ int is_solved(int (*grid)[SUDOKU_MAX_LEN]) {
   int i, j;
   for (i = 0; i < SUDOKU_MAX_LEN; i++) {
     for (j = 0; j < SUDOKU_MAX_LEN; j++) {
-      if (!grid[i][j]) return 0;
+      if (!grid[i][j])
+        return 0;
     }
   }
 
   return check_puzzle(grid);
 }
 
-void attempt_solution(int (*grid)[SUDOKU_MAX_LEN], int** mutable_idx,
-                      const int size, int* mutable_cell_num) {
+void attempt_solution(int (*grid)[SUDOKU_MAX_LEN], int **mutable_idx,
+                      const int size, int *mutable_cell_num) {
   int valid_placement_found = 0;
   while (*mutable_idx[*mutable_cell_num] < 9) {
     (*mutable_idx[*mutable_cell_num])++;
@@ -216,6 +221,7 @@ void attempt_solution(int (*grid)[SUDOKU_MAX_LEN], int** mutable_idx,
     fprintf(stderr,
             "You will access out of bounds memory via mutable_cell_num, "
             "stopping\n");
+    free(grid);
     exit(EXIT_FAILURE);
   }
 }
